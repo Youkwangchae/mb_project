@@ -1,0 +1,9 @@
+﻿  GS_Manager.cpp
+d:\대학 과제\전기프1\graduation_simulation_git\graduations\graduations\gs_manager.cpp(44): warning C4800: 'int': 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+d:\대학 과제\전기프1\graduation_simulation_git\graduations\graduations\gs_manager.cpp(72): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\대학 과제\전기프1\graduation_simulation_git\graduations\graduations\gs_manager.cpp(92): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+d:\대학 과제\전기프1\graduation_simulation_git\graduations\graduations\gs_manager.cpp(104): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  코드를 생성하고 있습니다...
+  건너뛰고 있습니다... (관련된 변경 내용 없음)
+  main.cpp
+  graduations.vcxproj -> D:\대학 과제\전기프1\Graduation_Simulation_git\graduations\Debug\graduations.exe
