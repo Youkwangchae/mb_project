@@ -332,7 +332,6 @@ void GS_Manager::inputSubjectScore()
 		while (true) {
 			cout << subjects[i].getName() << "을(를) 이수하셨습니까? (Y/N) : ";
 			getline(cin, subject_score);
-			subject_score = deleteZero(subject_score);
 			if (subject_score == "Y"||subject_score == "N") {
 				fout << subject_score + "\n";
 				break;
@@ -377,7 +376,6 @@ void GS_Manager::inputSubjectScore()
 				while (true) {
 					cout << subjects[i].getName() << "을(를) 이수하셨습니까? (Y/N) : ";
 					getline(cin, subject_score);
-					subject_score = deleteZero(subject_score);
 					if (subject_score == "Y" || subject_score == "N") {
 						fout << subject_score + "\n";
 						break;
@@ -397,7 +395,6 @@ void GS_Manager::inputSubjectScore()
 		while (true) {
 			cout << subjects[i].getName() << "을(를) 패스(수강대체)하셨습니까? (Y/N) : ";
 			getline(cin, subject_score);
-			subject_score = deleteZero(subject_score);
 			if (subject_score == "Y" || subject_score == "N") {
 				fout << subject_score + "\n";
 				break;
@@ -416,7 +413,6 @@ void GS_Manager::inputSubjectScore()
 			while (true) {
 				cout << subjects[i].getName() << "을(를) 이수하셨습니까? (Y/N) : ";
 				getline(cin, subject_score);
-				subject_score = deleteZero(subject_score);
 				if (subject_score == "Y" || subject_score == "N") {
 					fout << subject_score + "\n";
 					break;
