@@ -26,13 +26,10 @@ bool GS_Manager::playMain()
 		}
 		if (user.getDepartment() == "컴퓨터공학과")
 			input_value.push_back("0");
-			//fout << "0\n";
 		else if (user.getDepartment() == "소프트웨어학과")
 			input_value.push_back("1");
-			//fout << "1\n";
 		else if (user.getDepartment() == "컴퓨터공학부")
 			input_value.push_back("2");
-			//fout << "2\n";
 		inputSubjectScore();
 
 		fout.open("./Student_Info/" + user.getSchoolId() + ".txt");
@@ -323,7 +320,6 @@ void GS_Manager::inputSubjectScore()
 			subject_score = deleteZero(subject_score);
 			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
 				input_value.push_back(subject_score);
-				//fout << subject_score + "\n";
 				break;
 			}
 		}
@@ -338,7 +334,6 @@ void GS_Manager::inputSubjectScore()
 			subject_score = deleteZero(subject_score);
 			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
 				input_value.push_back(subject_score);
-				//fout << subject_score + "\n";
 				break;
 			}
 		}
@@ -353,7 +348,6 @@ void GS_Manager::inputSubjectScore()
 			getline(cin, subject_score);
 			if (subject_score == "Y"||subject_score == "N") {
 				input_value.push_back(subject_score);
-				//fout << subject_score + "\n";
 				break;
 			}
 			else {
@@ -373,7 +367,6 @@ void GS_Manager::inputSubjectScore()
 			subject_score = deleteZero(subject_score);
 			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
 				input_value.push_back(subject_score);
-				//fout << subject_score + "\n";
 				break;
 			}
 		}
@@ -399,7 +392,6 @@ void GS_Manager::inputSubjectScore()
 					getline(cin, subject_score);
 					if (subject_score == "Y" || subject_score == "N") {
 						input_value.push_back(subject_score);
-						//fout << subject_score + "\n";
 						break;
 					}
 					else {
@@ -419,7 +411,6 @@ void GS_Manager::inputSubjectScore()
 			getline(cin, subject_score);
 			if (subject_score == "Y" || subject_score == "N") {
 				input_value.push_back(subject_score);
-				//fout << subject_score + "\n";
 				break;
 			}
 			else {
@@ -438,7 +429,6 @@ void GS_Manager::inputSubjectScore()
 				getline(cin, subject_score);
 				if (subject_score == "Y" || subject_score == "N") {
 					input_value.push_back(subject_score);
-					//fout << subject_score + "\n";
 					break;
 				}
 				else {
