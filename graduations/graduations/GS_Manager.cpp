@@ -213,7 +213,7 @@ void GS_Manager::readYoramFile()
 		if (delimiter == string::npos) {
 			delimiter = str_data.find_first_of(":");
 			name = str_data.substr(0, delimiter);
-			credit = stoi(str_data.substr(delimiter + 1, 1));
+			credit = stoi(str_data.substr(delimiter + 1));
 		}
 		else {
 			string str_token1, str_token2;
@@ -223,7 +223,7 @@ void GS_Manager::readYoramFile()
 			name = str_token1.substr(0, delimiter) + " 또는 ";
 			delimiter = str_token2.find_first_of(":");
 			name += str_token2.substr(0, delimiter);
-			credit = stoi(str_token2.substr(delimiter + 1, 1));
+			credit = stoi(str_token2.substr(delimiter + 1));
 		}
 		
 		switch (count)
@@ -512,10 +512,9 @@ void GS_Manager::printResults()
 
 	//전공선택 출력문 저장
 	subject = yoram.getSelectMajor();
-	subjects = yoram.getCompulsoryMajor();
 	string major_result;
 	getline(fin, input_score);
-	yoram_credit += subject.getSubjectScore();
+	yoram_credit = subject.getSubjectScore();
 	major_result = "전공선택과목 : " + input_score + "학점/" + to_string(yoram_credit);
 	subject_score = stoi(input_score);
 	user.addTotalCredit(subject_score);
@@ -539,6 +538,7 @@ void GS_Manager::printResults()
 	cout << designation_result << endl;
 	
 	//전공필수 출력
+	subjects = yoram.getCompulsoryMajor();
 	if (!subjects.empty()) {
 		user_credit = 0;
 		yoram_credit = 0;
@@ -556,7 +556,6 @@ void GS_Manager::printResults()
 			yoram_credit += subjects[i].getSubjectScore();
 		}
 		major_result += ", 전공필수과목 : " + to_string(user_credit) + "학점/" + to_string(yoram_credit);
-		cout << endl << major_result << endl << endl;
 		user.addTotalCredit(user_credit);
 		if (user.getCangraduation()) {
 			if (user_credit < yoram_credit) {
@@ -564,6 +563,7 @@ void GS_Manager::printResults()
 			}
 		}
 	}
+	cout << endl << major_result << endl << endl;
 	cout << "===============================" << endl;
 
 	//패스과목 출력
