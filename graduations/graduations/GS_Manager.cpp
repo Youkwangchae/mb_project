@@ -27,7 +27,7 @@ bool GS_Manager::playMain()
 		fout.open("./Student_Info/" + user.getSchoolId() + ".txt");
 		if (user.getDepartment() == "컴퓨터공학과")
 			fout << "0\n";
-		else if (user.getDepartment() == "컴퓨터공학과")
+		else if (user.getDepartment() == "소프트웨어학과")
 			fout << "1\n";
 		else if (user.getDepartment() == "컴퓨터공학부")
 			fout << "2\n";
