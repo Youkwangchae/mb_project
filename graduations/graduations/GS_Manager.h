@@ -33,7 +33,7 @@ public:
 	//문자열에 숫자가 아닌 값이 있는지 없는지 확인하는 함수
 	bool nonInt(string str);
 	//문자열(학번)의 길이를 검증하는 함수
-	bool compareLength(string school_id);
+	bool compareLength(string &school_id);
 	//문자열의 길이를 검증하는 함수
 	bool compareLength(string str, int length);
 	//숫자 입력시 선행되는 0제거 함수

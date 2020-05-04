@@ -18,11 +18,22 @@ GS_Manager::~GS_Manager()
 bool GS_Manager::playMain()
 {
 	inputSchoolId();
-	fin.open("./student_info/" + user.getSchoolId() + ".txt");
+	fin.open("./Student_info/" + user.getSchoolId() + ".txt");
 	if (!(fin.is_open())) {
-		fout.open("./Student_Info/" + user.getSchoolId() + ".txt");
 		inputDepartment();
 		if (!openYoramFile()) {
+			return false;
+		}
+		fout.open("./Student_Info/" + user.getSchoolId() + ".txt");
+		if (user.getDepartment() == "컴퓨터공학과")
+			fout << "0\n";
+		else if (user.getDepartment() == "컴퓨터공학과")
+			fout << "1\n";
+		else if (user.getDepartment() == "컴퓨터공학부")
+			fout << "2\n";
+		fin.open("./Student_info/" + user.getSchoolId() + ".txt");
+		if (!(fin.is_open())) {
+			cout << "학번파일 저장경로가 없습니다." << endl;
 			return false;
 		}
 		inputSubjectScore();
@@ -30,7 +41,7 @@ bool GS_Manager::playMain()
 	}
 	
 	if (!(fin.is_open())) {
-		fin.open("./student_info/" + user.getSchoolId() + ".txt");
+		fin.open("./Student_info/" + user.getSchoolId() + ".txt");
 	}
 
 	if (!openYoramFile()) {
@@ -79,7 +90,7 @@ bool GS_Manager::nonInt(string str)
 	for (int i = 0; i < size; i++) {
 		char check_ch = str.at(i);
 		if (!(check_ch >= '0'&&check_ch <= '9')) {
-			if ((count == 1) && ((check_ch >= '!'&&check_ch <= '/') || (check_ch >= ':'&&check_ch <= '~'))) {
+			if ((count == 1) && ((check_ch >= '!'&&check_ch <= '/') || (check_ch >= ':'&&check_ch <= '~')) || check_ch == ' ') {
 				if (result != "")
 					result += ", ";
 				result += check_ch;
@@ -104,15 +115,19 @@ bool GS_Manager::nonInt(string str)
 	}
 }
 
-bool GS_Manager::compareLength(string school_id)
+bool GS_Manager::compareLength(string &school_id)
 {
-	if (school_id.length() == 9)
+	int size = school_id.length();
+	if (size == 9)
 		return true;
-	else if (school_id.length() > 9) {
+	else if (size > 9) {
 		cout << "입력한 학번이 너무 깁니다." << endl;
 		return false;
 	}
 	else {
+		for (int i = 0; i < 9 - size; i++) {
+			school_id.append(" ");
+		}
 		cout << "입력한 학번이 너무 짧습니다." << endl;
 		return false;
 	}
@@ -161,6 +176,9 @@ bool GS_Manager::openYoramFile()
 		user.setDepartment(departments[department_num]);
 	}
 	string id_year = user.getSchoolId().substr(2, 2);
+	if (id_year == "19"&&user.getDepartment() == "컴퓨터공학부") {
+		id_year = "20";
+	}
 	fin_yoram.open("./Booklet/" + id_year + user.getDepartment() + ".txt");
 	if (fin_yoram.is_open()) {
 		readYoramFile();
@@ -244,7 +262,7 @@ void GS_Manager::inputSchoolId()
 	string school_id;
 	while (true) {
 		cout << "학번을 입력해 주세요 : ";
-		cin >> school_id;
+		getline(cin, school_id);
 		if (checkId(school_id)) {
 			break;
 		}
@@ -257,17 +275,9 @@ void GS_Manager::inputDepartment()
 	string department;
 	while (true) {
 		cout << "학과를 입력하세요(컴퓨터공학과/소프트웨어학과/컴퓨터공학부) : ";
-		cin >> department;
-		if (department == "컴퓨터공학과") {
-			fout << "0\n";
-			break;
-		}
-		else if (department == "소프트웨어학과") {
-			fout << "1\n";
-			break;
-		}
-		else if (department == "컴퓨터공학부") {
-			fout << "2\n";
+		getline(cin, department);
+		if (department == "컴퓨터공학과" || department == "소프트웨어학과" || department == "컴퓨터공학부") {
+			user.setDepartment(department);
 			break;
 		}
 		else {
@@ -292,7 +302,7 @@ void GS_Manager::inputSubjectScore()
 	for (int i = 0; i < size; i++) {
 		while (true) {
 			cout << "기초교양 " << subjects[i].getName() << " 영역 학점 : ";
-			cin >> subject_score;
+			getline(cin, subject_score);
 			subject_score = deleteZero(subject_score);
 			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
 				fout << subject_score + "\n";
@@ -306,7 +316,7 @@ void GS_Manager::inputSubjectScore()
 	for (int i = 0; i < size; i++) {
 		while (true) {
 			cout << "심화교양 " << subjects[i].getName() << " 영역 학점 : ";
-			cin >> subject_score;
+			getline(cin, subject_score);
 			subject_score = deleteZero(subject_score);
 			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
 				fout << subject_score + "\n";
@@ -321,7 +331,7 @@ void GS_Manager::inputSubjectScore()
 	for (int i = 0; i < size; i++) {
 		while (true) {
 			cout << subjects[i].getName() << "을(를) 이수하셨습니까? (Y/N) : ";
-			cin >> subject_score;
+			getline(cin, subject_score);
 			subject_score = deleteZero(subject_score);
 			if (subject_score == "Y"||subject_score == "N") {
 				fout << subject_score + "\n";
@@ -340,7 +350,7 @@ void GS_Manager::inputSubjectScore()
 			subject = yoram.getSelectLiberal();
 		while (true) {
 			cout << subject.getName() << " 학점 : ";
-			cin >> subject_score;
+			getline(cin, subject_score);
 			subject_score = deleteZero(subject_score);
 			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
 				fout << subject_score + "\n";
@@ -353,7 +363,7 @@ void GS_Manager::inputSubjectScore()
 	if (!subjects.empty()) {
 		while (true) {
 			cout << "전공필수 학점 : ";
-			cin >> subject_score;
+			getline(cin, subject_score);
 			size = subjects.size();
 			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
 				break;
@@ -365,7 +375,7 @@ void GS_Manager::inputSubjectScore()
 			else {
 				while (true) {
 					cout << subjects[i].getName() << "을(를) 이수하셨습니까? (Y/N) : ";
-					cin >> subject_score;
+					getline(cin, subject_score);
 					subject_score = deleteZero(subject_score);
 					if (subject_score == "Y" || subject_score == "N") {
 						fout << subject_score + "\n";
@@ -385,7 +395,7 @@ void GS_Manager::inputSubjectScore()
 	for (int i = 0; i < size; i++) {
 		while (true) {
 			cout << subjects[i].getName() << "을(를) 패스(수강대체)하셨습니까? (Y/N) : ";
-			cin >> subject_score;
+			getline(cin, subject_score);
 			subject_score = deleteZero(subject_score);
 			if (subject_score == "Y" || subject_score == "N") {
 				fout << subject_score + "\n";
@@ -404,7 +414,7 @@ void GS_Manager::inputSubjectScore()
 		for (int i = 0; i < size; i++) {
 			while (true) {
 				cout << subjects[i].getName() << "을(를) 이수하셨습니까? (Y/N) : ";
-				cin >> subject_score;
+				getline(cin, subject_score);
 				subject_score = deleteZero(subject_score);
 				if (subject_score == "Y" || subject_score == "N") {
 					fout << subject_score + "\n";
@@ -422,6 +432,7 @@ void GS_Manager::printResults()
 {
 	//warning C4018 방지용 변수
 	int size;
+	cout << endl << "===============================" << endl;
 	cout << "학번 : " << user.getSchoolId() << endl;
 	cout << "소속 : " << user.getDepartment() << endl;
 	cout << "===============================" << endl;
