@@ -144,9 +144,15 @@
   <ItemGroup>
     <ClCompile Include="GS_Manager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Subject.cpp" />
+    <ClCompile Include="User.cpp" />
+    <ClCompile Include="Yoram.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GS_Manager.h" />
+    <ClInclude Include="Subject.h" />
+    <ClInclude Include="User.h" />
+    <ClInclude Include="Yoram.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

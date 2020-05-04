@@ -1,8 +1,6 @@
 #include<iostream>
 #include"GS_Manager.h"
 
-using namespace std;
-
 int main() {
 	
 	GS_Manager manager;
