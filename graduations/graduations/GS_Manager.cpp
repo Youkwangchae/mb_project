@@ -74,12 +74,26 @@ bool GS_Manager::nonInt(string str)
 	string result = "";
 	//warning C4018 방지용 변수
 	int size = str.length();
+	//한글 깨짐 방지 변수
+	int count = 1;
 	for (int i = 0; i < size; i++) {
 		char check_ch = str.at(i);
 		if (!(check_ch >= '0'&&check_ch <= '9')) {
-			if (result != "")
-				result += ", ";
-			result += check_ch;
+			if ((count == 1) && ((check_ch >= '!'&&check_ch <= '/') || (check_ch >= ':'&&check_ch <= '~'))) {
+				if (result != "")
+					result += ", ";
+				result += check_ch;
+			}
+			else {
+				if (count == 1) {
+					if (result != "")
+						result += ", ";
+					count++;
+				}
+				else
+					count--;
+				result += check_ch;
+			}
 		}
 	}
 	if (result == "")
