@@ -94,7 +94,7 @@ bool GS_Manager::compareLength(string school_id)
 {
 	if (school_id.length() == 9)
 		return true;
-	else if (user.getSchoolId().length() > 9) {
+	else if (school_id.length() > 9) {
 		cout << "입력한 학번이 너무 깁니다." << endl;
 		return false;
 	}
@@ -408,8 +408,6 @@ void GS_Manager::printResults()
 {
 	//warning C4018 방지용 변수
 	int size;
-	//졸업 가능 판별 변수
-	bool is_graduate = true;
 	cout << "학번 : " << user.getSchoolId() << endl;
 	cout << "소속 : " << user.getDepartment() << endl;
 	cout << "===============================" << endl;
@@ -435,9 +433,9 @@ void GS_Manager::printResults()
 	}
 	cout << endl << "총 기초교양학점 : " << user_credit << "학점/" << yoram_credit << "학점" << endl << endl;
 	user.addTotalCredit(user_credit);
-	if (is_graduate) {
+	if (user.getCangraduation()) {
 		if (user_credit < yoram_credit) {
-			is_graduate = false;
+			user.setCangraduation(false);
 		}
 	}
 
@@ -456,9 +454,9 @@ void GS_Manager::printResults()
 	}
 	cout << endl << "총 심화교양학점 : " << user_credit << "학점/" << yoram_credit << "학점" << endl << endl;
 	user.addTotalCredit(user_credit);
-	if (is_graduate) {
+	if (user.getCangraduation()) {
 		if (user_credit < yoram_credit) {
-			is_graduate = false;
+			user.setCangraduation(false);
 		}
 	}
 
@@ -480,9 +478,9 @@ void GS_Manager::printResults()
 	}
 	designation_result += "\n지정교양 : " + to_string(user_credit) + "학점/" + to_string(yoram_credit) + "학점\n";
 	user.addTotalCredit(user_credit);
-	if (is_graduate) {
+	if (user.getCangraduation()) {
 		if (user_credit < yoram_credit) {
-			is_graduate = false;
+			user.setCangraduation(false);
 		}
 	}
 
@@ -495,9 +493,9 @@ void GS_Manager::printResults()
 	major_result = "전공선택과목 : " + input_score + "학점/" + to_string(yoram_credit);
 	subject_score = stoi(input_score);
 	user.addTotalCredit(subject_score);
-	if (is_graduate) {
+	if (user.getCangraduation()) {
 		if (subject_score < yoram_credit) {
-			is_graduate = false;
+			user.setCangraduation(false);
 		}
 	}
 
@@ -534,9 +532,9 @@ void GS_Manager::printResults()
 		major_result += ", 전공필수과목 : " + to_string(user_credit) + "학점/" + to_string(yoram_credit);
 		cout << endl << major_result << endl << endl;
 		user.addTotalCredit(user_credit);
-		if (is_graduate) {
+		if (user.getCangraduation()) {
 			if (user_credit < yoram_credit) {
-				is_graduate = false;
+				user.setCangraduation(false);
 			}
 		}
 	}
@@ -568,9 +566,9 @@ void GS_Manager::printResults()
 				user_credit += subjects[i].getSubjectScore();
 			}
 			cout << subjects[i].getName() << " : " << input_score << endl;
-			if (is_graduate) {
+			if (user.getCangraduation()) {
 				if (input_score=="N") {
-					is_graduate = false;
+					user.setCangraduation(false);
 				}
 			}
 		}
@@ -582,14 +580,14 @@ void GS_Manager::printResults()
 	cout << "총 이수학점 : " << user.getTotalCredit() << "학점/" << yoram.getTotalCredit() << "학점" << endl;
 	cout << "===============================" << endl;
 	
-	if (is_graduate) {
+	if (user.getCangraduation()) {
 		if (user.getTotalCredit()<yoram.getTotalCredit()) {
-			is_graduate = false;
+			user.setCangraduation(false);
 		}
 	}
 	//졸업가능여부 출력
 	cout << "졸업 가능 여부 : ";
-	if (is_graduate) {
+	if (user.getCangraduation()) {
 		cout << "졸업 가능!" << endl;
 	}
 	else {

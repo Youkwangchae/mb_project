@@ -2,7 +2,7 @@
 
 
 User::User(string school_id, string department)
-	:User(school_id, department, false)
+	:User(school_id, department, true)
 {
 }
 
