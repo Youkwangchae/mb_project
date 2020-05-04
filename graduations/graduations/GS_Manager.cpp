@@ -141,6 +141,10 @@ bool GS_Manager::compareLength(string str, int length)
 		cout << "입력한 값이 너무 깁니다." << endl;
 		return false;
 	}
+	else if (size == 0) {
+		cout << "입력한 값이 너무 짧습니다." << endl;
+		return false;
+	}
 	else {
 		return true;
 	}
@@ -281,7 +285,7 @@ void GS_Manager::inputDepartment()
 			break;
 		}
 		else {
-			cout << "유호하지 않은 입력입니다." << endl;
+			cout << "유효하지 않은 입력입니다." << endl;
 		}
 	}
 	user.setDepartment(department);
