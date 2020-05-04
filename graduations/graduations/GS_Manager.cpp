@@ -24,22 +24,27 @@ bool GS_Manager::playMain()
 		if (!openYoramFile()) {
 			return false;
 		}
-		fout.open("./Student_Info/" + user.getSchoolId() + ".txt");
 		if (user.getDepartment() == "컴퓨터공학과")
-			fout << "0\n";
+			input_value.push_back("0");
+			//fout << "0\n";
 		else if (user.getDepartment() == "소프트웨어학과")
-			fout << "1\n";
+			input_value.push_back("1");
+			//fout << "1\n";
 		else if (user.getDepartment() == "컴퓨터공학부")
-			fout << "2\n";
+			input_value.push_back("2");
+			//fout << "2\n";
+		inputSubjectScore();
+
+		fout.open("./Student_Info/" + user.getSchoolId() + ".txt");
 		fin.open("./Student_info/" + user.getSchoolId() + ".txt");
 		if (!(fin.is_open())) {
 			cout << "학번파일 저장경로가 없습니다." << endl;
 			return false;
 		}
-		inputSubjectScore();
+		inputUserFile();
 		fout.close();
 	}
-	
+
 	if (!(fin.is_open())) {
 		fin.open("./Student_info/" + user.getSchoolId() + ".txt");
 	}
@@ -291,6 +296,14 @@ void GS_Manager::inputDepartment()
 	user.setDepartment(department);
 }
 
+void GS_Manager::inputUserFile()
+{
+	int size = input_value.size();
+	for (int i = 0; i < size; i++) {
+		fout << input_value[i] + "\n";
+	}
+}
+
 void GS_Manager::inputSubjectScore()
 {
 	//warning C4018 방지용 변수
@@ -309,7 +322,8 @@ void GS_Manager::inputSubjectScore()
 			getline(cin, subject_score);
 			subject_score = deleteZero(subject_score);
 			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
-				fout << subject_score + "\n";
+				input_value.push_back(subject_score);
+				//fout << subject_score + "\n";
 				break;
 			}
 		}
@@ -323,7 +337,8 @@ void GS_Manager::inputSubjectScore()
 			getline(cin, subject_score);
 			subject_score = deleteZero(subject_score);
 			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
-				fout << subject_score + "\n";
+				input_value.push_back(subject_score);
+				//fout << subject_score + "\n";
 				break;
 			}
 		}
@@ -337,7 +352,8 @@ void GS_Manager::inputSubjectScore()
 			cout << subjects[i].getName() << "을(를) 이수하셨습니까? (Y/N) : ";
 			getline(cin, subject_score);
 			if (subject_score == "Y"||subject_score == "N") {
-				fout << subject_score + "\n";
+				input_value.push_back(subject_score);
+				//fout << subject_score + "\n";
 				break;
 			}
 			else {
@@ -356,7 +372,8 @@ void GS_Manager::inputSubjectScore()
 			getline(cin, subject_score);
 			subject_score = deleteZero(subject_score);
 			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
-				fout << subject_score + "\n";
+				input_value.push_back(subject_score);
+				//fout << subject_score + "\n";
 				break;
 			}
 		}
@@ -381,7 +398,8 @@ void GS_Manager::inputSubjectScore()
 					cout << subjects[i].getName() << "을(를) 이수하셨습니까? (Y/N) : ";
 					getline(cin, subject_score);
 					if (subject_score == "Y" || subject_score == "N") {
-						fout << subject_score + "\n";
+						input_value.push_back(subject_score);
+						//fout << subject_score + "\n";
 						break;
 					}
 					else {
@@ -400,7 +418,8 @@ void GS_Manager::inputSubjectScore()
 			cout << subjects[i].getName() << "을(를) 패스(수강대체)하셨습니까? (Y/N) : ";
 			getline(cin, subject_score);
 			if (subject_score == "Y" || subject_score == "N") {
-				fout << subject_score + "\n";
+				input_value.push_back(subject_score);
+				//fout << subject_score + "\n";
 				break;
 			}
 			else {
@@ -418,7 +437,8 @@ void GS_Manager::inputSubjectScore()
 				cout << subjects[i].getName() << "을(를) 이수하셨습니까? (Y/N) : ";
 				getline(cin, subject_score);
 				if (subject_score == "Y" || subject_score == "N") {
-					fout << subject_score + "\n";
+					input_value.push_back(subject_score);
+					//fout << subject_score + "\n";
 					break;
 				}
 				else {

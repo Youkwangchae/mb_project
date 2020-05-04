@@ -21,6 +21,8 @@ private:
 	User user;
 	//요람 정보
 	Yoram yoram;
+	//사용자 입력값 임시 저장 변수
+	vector<string> input_value;
 public:
 	GS_Manager();
 	~GS_Manager();
@@ -46,6 +48,8 @@ public:
 	void inputSchoolId();
 	//학과 입력 함수
 	void inputDepartment();
+	//유저파일 쓰기
+	void inputUserFile();
 	//학점 입력하는 함수
 	void inputSubjectScore();
 	//최종 결과 출력 함수
