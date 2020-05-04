@@ -364,6 +364,7 @@ void GS_Manager::inputSubjectScore()
 		while (true) {
 			cout << "전공필수 학점 : ";
 			getline(cin, subject_score);
+			subject_score = deleteZero(subject_score);
 			size = subjects.size();
 			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
 				break;
