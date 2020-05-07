@@ -1,6 +1,17 @@
-#include "User.h"
+#include<iostream>
+#include<stdlib.h>
+#include"GS_Manager.h"
 
 int main() {
-	User* user = new User("201911144", "컴퓨터공학부", 134, true);
-	User user2("202011144", "컴퓨터공학부");
+	
+	GS_Manager manager;
+	if (manager.playMain()) {
+		cout << "프로그램 종료" << endl;
+	}
+	else {
+		cout << "오류로 인한 프로그램 종료" << endl;
+	}
+	system("pause");
+
+	return 0;
 }
