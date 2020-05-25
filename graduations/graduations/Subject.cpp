@@ -7,7 +7,12 @@ Subject::Subject()
 }
 
 Subject::Subject(string name, int subject_score)
-	:name(name), subject_score(subject_score)
+	:Subject(name, subject_score, 0)
+{
+}
+
+Subject::Subject(string name, int subject_score, int semester)
+	: name(name), subject_score(subject_score), semester(semester)
 {
 }
 
@@ -25,6 +30,11 @@ void Subject::setSubjectScore(int subject_score)
 	this->subject_score = subject_score;
 }
 
+void Subject::setSemester(int semester)
+{
+	this->semester = semester;
+}
+
 string Subject::getName()
 {
 	return this->name;
@@ -33,5 +43,10 @@ string Subject::getName()
 int Subject::getSubjectScore()
 {
 	return this->subject_score;
+}
+
+int Subject::getSemester()
+{
+	return this->semester;
 }
 

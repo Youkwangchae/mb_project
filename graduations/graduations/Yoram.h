@@ -9,6 +9,9 @@ using namespace std;
 class Yoram
 {
 private:
+	//모든과목이 들어있는 벡터
+	vector<vector<Subject>> subjects;
+
 	//기초교양
 	vector<Subject> basic_liberal;
 	//심화교양
@@ -31,6 +34,9 @@ public:
 	Yoram();
 	~Yoram();
 	//각 과목 리턴 함수
+	vector<Subject> getSubjects(int index);
+	void pushSubject(Subject subject, int index);
+
 	vector<Subject> getBasicLiberal();
 	vector<Subject> getImproveLiberal();
 	vector<Subject> getDesignationLiberal();

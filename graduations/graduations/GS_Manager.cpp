@@ -210,52 +210,33 @@ void GS_Manager::readYoramFile()
 			break;
 		}
 		string name;
-		int credit;
-		string::size_type delimiter = str_data.find_first_of("|");
-		if (delimiter == string::npos) {
-			delimiter = str_data.find_first_of(":");
-			name = str_data.substr(0, delimiter);
-			credit = stoi(str_data.substr(delimiter + 1));
+		int credit, semester;
+		string::size_type semester_delimiter = str_data.find_first_of("-");
+		string::size_type credit_delimiter = str_data.find_first_of("|");
+		if (semester_delimiter != string::npos) {
+			semester = stoi(str_data.substr(semester_delimiter + 1));
+			str_data = str_data.substr(0, semester_delimiter);
+		}
+		if (credit_delimiter == string::npos) {
+			credit_delimiter = str_data.find_first_of(":");
+			name = str_data.substr(0, credit_delimiter);
+			credit = stoi(str_data.substr(credit_delimiter + 1));
 		}
 		else {
 			string str_token1, str_token2;
-			str_token1 = str_data.substr(0, delimiter);
-			str_token2 = str_data.substr(delimiter + 1);
-			delimiter = str_token1.find_first_of(":");
-			name = str_token1.substr(0, delimiter) + " 또는 ";
-			delimiter = str_token2.find_first_of(":");
-			name += str_token2.substr(0, delimiter);
-			credit = stoi(str_token2.substr(delimiter + 1));
+			str_token1 = str_data.substr(0, credit_delimiter);
+			str_token2 = str_data.substr(credit_delimiter + 1);
+			credit_delimiter = str_token1.find_first_of(":");
+			name = str_token1.substr(0, credit_delimiter) + " 또는 ";
+			credit_delimiter = str_token2.find_first_of(":");
+			name += str_token2.substr(0, credit_delimiter);
+			credit = stoi(str_token2.substr(credit_delimiter + 1));
 		}
-		
-		switch (count)
-		{
-		case 0:
-			yoram.pushBasicLiberal(name, credit);
-			break;
-		case 1:
-			yoram.pushImproveLiberal(name, credit);
-			break;
-		case 2:
-			yoram.pushDesignationLiberal(name, credit);
-			break;
-		case 3:
-			yoram.setSelectMajor(name, credit);
-			break;
-		case 4:
-			yoram.setSelectLiberal(name, credit);
-			break;
-		case 5:
-			yoram.pushCompulsoryMajor(name, credit);
-			break;
-		case 6:
-			yoram.pushPassSubject(name, credit);
-			break;
-		case 7:
-			yoram.pushCompulsorySubject(name, credit);
-			break;
-		default:
-			break;
+		if (semester_delimiter == string::npos) {
+			yoram.pushSubject(Subject(name, credit), count);
+		}
+		else {
+			yoram.pushSubject(Subject(name, credit, semester), count);
 		}
 	}
 	getline(fin_yoram, str_data);
@@ -310,129 +291,84 @@ void GS_Manager::inputSubjectScore()
 	//과목 저장 변수
 	vector<Subject> subjects;
 	Subject subject;
-	//기초교양 질문
-	subjects = yoram.getBasicLiberal();
-	size = subjects.size();
-	for (int i = 0; i < size; i++) {
-		while (true) {
-			cout << "기초교양 " << subjects[i].getName() << " 영역 학점 : ";
-			getline(cin, subject_score);
-			subject_score = deleteZero(subject_score);
-			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
-				input_value.push_back(subject_score);
-				break;
-			}
-		}
-	}
-	//심화교양 질문
-	subjects = yoram.getImproveLiberal();
-	size = subjects.size();
-	for (int i = 0; i < size; i++) {
-		while (true) {
-			cout << "심화교양 " << subjects[i].getName() << " 영역 학점 : ";
-			getline(cin, subject_score);
-			subject_score = deleteZero(subject_score);
-			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
-				input_value.push_back(subject_score);
-				break;
-			}
-		}
-	}
-	//지정교양 질문
-	subjects = yoram.getDesignationLiberal();
-	cout << "지정교양" << endl;
-	size = subjects.size();
-	for (int i = 0; i < size; i++) {
-		while (true) {
-			cout << subjects[i].getName() << "을(를) 이수하셨습니까? (Y/N) : ";
-			getline(cin, subject_score);
-			if (subject_score == "Y"||subject_score == "N") {
-				input_value.push_back(subject_score);
-				break;
-			}
-			else {
-				cout << "유효하지 않은 입력입니다." << endl;
-			}
-		}
-	}
-	//전공선택, 일반선택 질문
-	for (int i = 0; i < 2; i++) {
-		if (i == 0)
-			subject = yoram.getSelectMajor();
-		else
-			subject = yoram.getSelectLiberal();
-		while (true) {
-			cout << subject.getName() << " 학점 : ";
-			getline(cin, subject_score);
-			subject_score = deleteZero(subject_score);
-			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
-				input_value.push_back(subject_score);
-				break;
-			}
-		}
-	}
-	//전공필수 질문
-	subjects = yoram.getCompulsoryMajor();
-	if (!subjects.empty()) {
-		while (true) {
-			cout << "전공필수 학점 : ";
-			getline(cin, subject_score);
-			subject_score = deleteZero(subject_score);
+
+	for (int i = 0; i < 8; i++) {
+		subjects = yoram.getSubjects(i);
+		if (!subjects.empty()) {
 			size = subjects.size();
-			if (nonInt(subject_score)*compareLength(subject_score, 3)) {
-				break;
-			}
-		}
-		for (int i = 0; i < size; i++) {
-			if (subject_score == "0")
-				fout << "N\n";
-			else {
+			//반복출력되면 안되는 경우만 빼놓음
+			if (i == 2)
+				cout << "지정교양" << endl;
+			else if (i == 6)
+				cout << "과목 패스 여부" << endl;
+			else if (i == 7)
+				cout << "필수과목이수" << endl;
+			else if (i == 5) {
 				while (true) {
-					cout << subjects[i].getName() << "을(를) 이수하셨습니까? (Y/N) : ";
+					cout << "전공필수 학점 : ";
 					getline(cin, subject_score);
-					if (subject_score == "Y" || subject_score == "N") {
-						input_value.push_back(subject_score);
+					subject_score = deleteZero(subject_score);
+					if (nonInt(subject_score)*compareLength(subject_score, 3)) {
 						break;
 					}
-					else {
-						cout << "유효하지 않은 입력입니다." << endl;
+				}
+			}
+			for (int j = 0; j < size; j++) {
+				if (i == 0 || i == 1) {
+					while (true) {
+						if (i == 0)
+							cout << "기초";
+						else
+							cout << "심화";
+						cout << "교양 " << subjects[j].getName() << " 영역 학점 : ";
+						getline(cin, subject_score);
+						subject_score = deleteZero(subject_score);
+						if (nonInt(subject_score)*compareLength(subject_score, 3)) {
+							input_value.push_back(subject_score);
+							break;
+						}
 					}
 				}
-			}
-		}
-	}
-	//패스과목 질문
-	subjects = yoram.getPassSubject();
-	cout << "과목 패스 여부" << endl;
-	size = subjects.size();
-	for (int i = 0; i < size; i++) {
-		while (true) {
-			cout << subjects[i].getName() << "을(를) 패스(수강대체)하셨습니까? (Y/N) : ";
-			getline(cin, subject_score);
-			if (subject_score == "Y" || subject_score == "N") {
-				input_value.push_back(subject_score);
-				break;
-			}
-			else {
-				cout << "유효하지 않은 입력입니다." << endl;
-			}
-		}
-	}
-	//필수과목 질문
-	subjects = yoram.getCompulsorySubject();
-	cout << "필수과목이수" << endl;
-	if (!subjects.empty()) {
-		size = subjects.size();
-		for (int i = 0; i < size; i++) {
-			while (true) {
-				cout << subjects[i].getName() << "을(를) 이수하셨습니까? (Y/N) : ";
-				getline(cin, subject_score);
-				if (subject_score == "Y" || subject_score == "N") {
-					input_value.push_back(subject_score);
-					break;
+				else if (i == 2 || i == 5 || i == 7) {
+					if (subject_score == "0" && i == 5)
+						input_value.push_back(subject_score);
+					else {
+						while (true) {
+							cout << subjects[j].getName() << "을(를) 이수하셨습니까? (Y/N) : ";
+							getline(cin, subject_score);
+							if (subject_score == "Y" || subject_score == "N") {
+								input_value.push_back(subject_score);
+								break;
+							}
+							else {
+								cout << "유효하지 않은 입력입니다." << endl;
+							}
+						}
+					}
 				}
-				else {
-					cout << "유효하지 않은 입력입니다." << endl;
+				else if (i == 3 || i == 4) {
+					while (true) {
+						cout << subjects[j].getName() << " 학점 : ";
+						getline(cin, subject_score);
+						subject_score = deleteZero(subject_score);
+						if (nonInt(subject_score)*compareLength(subject_score, 3)) {
+							input_value.push_back(subject_score);
+							break;
+						}
+					}
+				}
+				else if (i == 6) {
+					while (true) {
+						cout << subjects[j].getName() << "을(를) 패스(수강대체)하셨습니까? (Y/N) : ";
+						getline(cin, subject_score);
+						if (subject_score == "Y" || subject_score == "N") {
+							input_value.push_back(subject_score);
+							break;
+						}
+						else {
+							cout << "유효하지 않은 입력입니다." << endl;
+						}
+					}
 				}
 			}
 		}
@@ -457,7 +393,7 @@ void GS_Manager::printResults()
 	int user_credit = 0;
 	int yoram_credit = 0;
 	//기초교양 출력
-	subjects = yoram.getBasicLiberal();
+	subjects = yoram.getSubjects(0);
 	cout << "기초교양" << endl;
 	size = subjects.size();
 	for (int i = 0; i < size; i++) {
@@ -476,7 +412,7 @@ void GS_Manager::printResults()
 	}
 
 	//심화교양 출력
-	subjects = yoram.getImproveLiberal();
+	subjects = yoram.getSubjects(1);
 	cout << "심화교양" << endl;
 	user_credit = 0;
 	yoram_credit = 0;
@@ -498,7 +434,7 @@ void GS_Manager::printResults()
 
 	//지정교양 출력문 저장
 	string designation_result = "";
-	subjects = yoram.getDesignationLiberal();
+	subjects = yoram.getSubjects(2);
 	user_credit = 0;
 	yoram_credit = 0;
 	size = subjects.size();
@@ -508,7 +444,13 @@ void GS_Manager::printResults()
 			user_credit += subjects[i].getSubjectScore();
 		}
 		else {
-			designation_result += "-" + subjects[i].getName() + "\n";
+			designation_result += "-" + subjects[i].getName() + " / ";
+			if (subjects[i].getSemester() == 1 || subjects[i].getSemester() == 2) {
+				designation_result += to_string(subjects[i].getSemester()) + "학기 개설과목\n";
+			}
+			else if (subjects[i].getSemester() == 3) {
+				designation_result += "1학기 2학기 모두 개설\n";
+			}
 		}
 		yoram_credit += subjects[i].getSubjectScore();
 	}
@@ -521,11 +463,11 @@ void GS_Manager::printResults()
 	}
 
 	//전공선택 출력문 저장
-	subject = yoram.getSelectMajor();
+	subjects = yoram.getSubjects(3);
 	string major_result;
 	getline(fin, input_score);
-	yoram_credit = subject.getSubjectScore();
-	major_result = "전공선택과목 : " + input_score + "학점/" + to_string(yoram_credit);
+	yoram_credit = subjects[0].getSubjectScore();
+	major_result = "전공선택과목 : " + input_score + "학점/" + to_string(yoram_credit) + "학점";
 	subject_score = stoi(input_score);
 	user.addTotalCredit(subject_score);
 	if (user.getCangraduation()) {
@@ -535,7 +477,7 @@ void GS_Manager::printResults()
 	}
 
 	//일반선택 출력
-	subject = yoram.getSelectLiberal();
+	subjects = yoram.getSubjects(4);
 	getline(fin, input_score);
 	cout << "총 일선학점 : " << input_score << "학점" << endl;
 	subject_score = stoi(input_score);
@@ -548,7 +490,7 @@ void GS_Manager::printResults()
 	cout << designation_result << endl;
 	
 	//전공필수 출력
-	subjects = yoram.getCompulsoryMajor();
+	subjects = yoram.getSubjects(5);
 	if (!subjects.empty()) {
 		user_credit = 0;
 		yoram_credit = 0;
@@ -561,11 +503,17 @@ void GS_Manager::printResults()
 				user_credit += subjects[i].getSubjectScore();
 			}
 			else {
-				cout << "-" << subjects[i].getName() << endl;
+				cout << "-" << subjects[i].getName() << " / ";
+				if (subjects[i].getSemester() == 1 || subjects[i].getSemester() == 2) {
+					cout << to_string(subjects[i].getSemester()) + "학기 개설과목" << endl;
+				}
+				else if (subjects[i].getSemester() == 3) {
+					cout << "1학기 2학기 모두 개설" << endl;
+				}
 			}
 			yoram_credit += subjects[i].getSubjectScore();
 		}
-		major_result += ", 전공필수과목 : " + to_string(user_credit) + "학점/" + to_string(yoram_credit);
+		major_result += ", 전공필수과목 : " + to_string(user_credit) + "학점/" + to_string(yoram_credit) + "학점";
 		user.addTotalCredit(user_credit);
 		if (user.getCangraduation()) {
 			if (user_credit < yoram_credit) {
@@ -577,7 +525,7 @@ void GS_Manager::printResults()
 	cout << "===============================" << endl;
 
 	//패스과목 출력
-	subjects = yoram.getPassSubject();
+	subjects = yoram.getSubjects(6);
 	cout << "과목 패스여부" << endl;
 	user_credit = 0;
 	size = subjects.size();
@@ -591,17 +539,25 @@ void GS_Manager::printResults()
 	user.addTotalCredit(user_credit);
 
 	//필수과목 출력
-	subjects = yoram.getCompulsorySubject();
-	cout << endl << "필수과목 수강여부" << endl;
+	subjects = yoram.getSubjects(7);
 	if (!subjects.empty()) {
+		cout << endl << "필수과목 수강여부";
 		user_credit = 0;
 		size = subjects.size();
 		for (int i = 0; i < size; i++) {
 			getline(fin, input_score);
+			cout << endl << subjects[i].getName() << " : " << input_score;
 			if (input_score == "Y") {
 				user_credit += subjects[i].getSubjectScore();
 			}
-			cout << subjects[i].getName() << " : " << input_score << endl;
+			else {
+				if (subjects[i].getSemester() == 1 || subjects[i].getSemester() == 2) {
+					cout << " / " << to_string(subjects[i].getSemester()) + "학기 개설과목" << endl;
+				}
+				else if (subjects[i].getSemester() == 3) {
+					cout << " / 1학기 2학기 모두 개설" << endl;
+				}
+			}
 			if (user.getCangraduation()) {
 				if (input_score=="N") {
 					user.setCangraduation(false);
@@ -612,7 +568,7 @@ void GS_Manager::printResults()
 	}
 
 	//총이수학점 출력
-	cout << "===============================" << endl;
+	cout << "\n===============================" << endl;
 	cout << "총 이수학점 : " << user.getTotalCredit() << "학점/" << yoram.getTotalCredit() << "학점" << endl;
 	cout << "===============================" << endl;
 	
