@@ -50,8 +50,14 @@ public:
 	void inputDepartment();
 	//유저파일 쓰기
 	void inputUserFile();
+	//유저파일 읽기
+	void readUserFile();
 	//학점 입력하는 함수
 	void inputSubjectScore();
+	//단계별 적용 함수
+	void applyStep();
+	//선택적 적용 함수
+	void applySelect();
 	//최종 결과 출력 함수
 	void printResults();
 };
