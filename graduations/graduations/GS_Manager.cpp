@@ -139,14 +139,31 @@ bool GS_Manager::nonInt(string str)
 bool GS_Manager::compareLength(string &school_id)
 {
 	int size = school_id.length();
-	if (size == 9)
+	int count = 0;
+	bool isHangul = false;
+	for (int i = 0; i < size; i++) {
+		if (isHangul) {
+			count++;
+			isHangul = false;
+		}
+		else {
+			char check_ch = school_id.at(i);
+			if ((check_ch >= '!' && check_ch <= '~') || check_ch == ' ') {
+				count++;
+			}
+			else {
+				isHangul = true;
+			}
+		}
+	}
+	if (count == 9)
 		return true;
-	else if (size > 9) {
+	else if (count > 9) {
 		cout << "입력한 학번이 너무 깁니다." << endl;
 		return false;
 	}
 	else {
-		for (int i = 0; i < 9 - size; i++) {
+		for (int i = 0; i < 9 - count; i++) {
 			school_id.append(" ");
 		}
 		cout << "입력한 학번이 너무 짧습니다." << endl;
@@ -158,11 +175,28 @@ bool GS_Manager::compareLength(string str, int length)
 {
 	//warning C4018 방지용 변수
 	int size = str.length();
-	if (size > length) {
+	int count = 0;
+	bool isHangul = false;
+	for (int i = 0; i < size; i++) {
+		if (isHangul) {
+			count++;
+			isHangul = false;
+		}
+		else {
+			char check_ch = str.at(i);
+			if ((check_ch >= '!' && check_ch <= '~') || check_ch == ' ') {
+				count++;
+			}
+			else {
+				isHangul = true;
+			}
+		}
+	}
+	if (count > length) {
 		cout << "입력한 값이 너무 깁니다." << endl;
 		return false;
 	}
-	else if (size == 0) {
+	else if (count == 0) {
 		cout << "입력한 값이 너무 짧습니다." << endl;
 		return false;
 	}
