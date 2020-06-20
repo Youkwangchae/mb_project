@@ -50,7 +50,7 @@ bool GS_Manager::playMain()
 		fin.seekg(0, ios::beg);
 		string select_mode;
 		while (true) {
-			cout << "1)일괄 적용 2)단계별 적용 3)질문 선택 후 적용 : ";
+			cout << "1)일괄 적용 2)단계별 적용 3)선택해서 수정 : ";
 			getline(cin, select_mode);
 			if (nonInt(select_mode)*compareLength(select_mode, 1)) {
 				if (select_mode == "1") {
